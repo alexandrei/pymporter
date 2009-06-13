@@ -1,0 +1,1 @@
+#!/usr/bin/env python# -*- coding: utf-8 -*- '''Small script to copy photo files according to their EXIF data. ''' __version__ = '0.1'__author__ = u'Draghina Alexandru'.encode('utf-8')
