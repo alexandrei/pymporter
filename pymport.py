@@ -11,6 +11,8 @@ import EXIF
 
 __usage = """Specify the input folder!"""
 __version = """0.1"""
+__extension = ('.jpg', '.jpeg')
+__raw_extensions = ('.orf')
 
 def usage():
     print __usage
