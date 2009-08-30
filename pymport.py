@@ -19,29 +19,22 @@ def usage():
     
 def version():
     print __version
-    
-def process_folder(_, dir_name, files):
-    print dir_name
-    for fname in files:
-        try:
-            f = open(os.path.join(dir_name, fname), 'rb')
-        except IOError:
-            #print "Failed to open file %s" % fname
-            pass
-        else:
-            print "Opened file %s" % fname
-            tags = EXIF.process_file(f, stop_tag='DateTimeOriginal', details = False)
-            #for tag in tags:
-            try:
-                print tags['EXIF DateTimeOriginal']
-            except KeyError:
-                print "That key does not exist for file %s" % fname
-            f.close()
 
 def main(args):
     for root, dirs, files in os.walk(args[0]):
         for file_name in files:
-            print "file: %s in dir %s" % (file_name, os.path.join(root,file_name))
+            try:
+                f = open(os.path.join(root,file_name), 'rb')
+            except IOError:
+                print "Failed to open file %s" % os.path.join(root,file_name)
+            else:
+                print "Opened file %s" % os.path.join(root,file_name)
+                tags = EXIF.process_file(f, stop_tag='DateTimeOriginal', details = False)
+                try:
+                    print tags['EXIF DateTimeOriginal']
+                except KeyError:
+                    print "Failed to get 'EXIF DateTimeOriginal' for file %s" % os.path.join(root,file_name)
+                f.close()
         #if 'CVS' in dirs:
         #    dirs.remove('CVS')
     return 0
