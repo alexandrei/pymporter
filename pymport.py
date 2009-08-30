@@ -22,13 +22,13 @@ def process_folder(_, dir_name, files):
     print dir_name
     for fname in files:
         try:
-            f = open(dir_name + fname)
+            f = open(dir_name + fname, 'rb')
         except IOError:
             #print "Failed to open file %s" % fname
             pass
         else:
             print "Opened file %s" % fname
-            print EXIF.process_file(f)
+            print EXIF.process_file(f, stop_tag='EXIF DateTimeOriginal', details = False) #details = False, 
         
 
 def main(args):
