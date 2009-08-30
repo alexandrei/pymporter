@@ -20,7 +20,14 @@ def version():
     
 def process_folder(_, dir_name, files):
     for fname in files:
-        print fname
+        try:
+            f = open(fname)
+        except IOError:
+            #print "Failed to open file %s" % fname
+        else:
+            print "Opened file %s" % fname
+            print EXIF.process_file(f)
+        
 
 def main(args):
     if(not len(args)):
