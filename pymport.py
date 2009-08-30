@@ -28,7 +28,9 @@ def process_folder(_, dir_name, files):
             pass
         else:
             print "Opened file %s" % fname
-            print EXIF.process_file(f, stop_tag='EXIF DateTimeOriginal', details = False) #details = False, 
+            tags = EXIF.process_file(f, stop_tag='DateTimeOriginal', details = False)
+            #for tag in tags:
+            print tags['EXIF DateTimeOriginal']
         
 
 def main(args):
