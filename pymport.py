@@ -47,7 +47,10 @@ def main(args):
     return 0
 
 if __name__ == '__main__':
-    if '--version' in sys.argv:
+    if (len(sys.argv) < 2):
+        usage()
+        sys.exit(1)
+    elif '--version' in sys.argv:
         version()
         sys.exit(0)
     elif '--help' in sys.argv:
