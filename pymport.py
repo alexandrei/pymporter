@@ -30,7 +30,10 @@ def process_folder(_, dir_name, files):
             print "Opened file %s" % fname
             tags = EXIF.process_file(f, stop_tag='DateTimeOriginal', details = False)
             #for tag in tags:
-            print tags['EXIF DateTimeOriginal']
+            try:
+                print tags['EXIF DateTimeOriginal']
+            except KeyError:
+                print "That key does not exist for file %s" % fname
         
 
 def main(args):
