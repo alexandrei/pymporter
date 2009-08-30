@@ -22,7 +22,7 @@ def process_folder(_, dir_name, files):
     print dir_name
     for fname in files:
         try:
-            f = open(dir_name + fname, 'rb')
+            f = open(os.path.join(dir_name, fname), 'rb')
         except IOError:
             #print "Failed to open file %s" % fname
             pass
@@ -34,7 +34,7 @@ def process_folder(_, dir_name, files):
                 print tags['EXIF DateTimeOriginal']
             except KeyError:
                 print "That key does not exist for file %s" % fname
-        
+            f.close()
 
 def main(args):
     if(not len(args)):
