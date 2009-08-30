@@ -11,38 +11,43 @@ import EXIF
 
 __usage = """Specify the input folder!"""
 __version = """0.1"""
+__extensions = ('.jpg', '.jpeg')
+__raw_extensions = ('.orf')
 
 def usage():
     print __usage
     
 def version():
     print __version
-    
-def process_folder(_, dir_name, files):
-    print dir_name
-    for fname in files:
-        try:
-            f = open(dir_name + fname, 'rb')
-        except IOError:
-            #print "Failed to open file %s" % fname
-            pass
-        else:
-            print "Opened file %s" % fname
-            tags = EXIF.process_file(f, stop_tag='DateTimeOriginal', details = False)
-            #for tag in tags:
-            print tags['EXIF DateTimeOriginal']
-        
 
 def main(args):
-    if(not len(args)):
-        usage()
-        return -1
-        
-    os.path.walk(args[0], process_folder, None)
+    for root, dirs, files in os.walk(args[0]):
+        for file_name in files:
+            file_name_lower = file_name.lower()
+            if file_name_lower.endswith(__extensions):
+                try:
+                    f = open(os.path.join(root,file_name), 'rb')
+                except IOError:
+                    print "Failed to open file %s" % os.path.join(root,file_name)
+                else:
+                    print "Opened file %s" % os.path.join(root,file_name)
+                    tags = EXIF.process_file(f, stop_tag='DateTimeOriginal', details = False)
+                    try:
+                        print tags['EXIF DateTimeOriginal']
+                    except KeyError:
+                        print "Failed to get 'EXIF DateTimeOriginal' for file %s" % os.path.join(root,file_name)
+                    f.close()
+            else:
+                print "Skip file %s" % os.path.join(root,file_name)
+        #if 'CVS' in dirs:
+        #    dirs.remove('CVS')
     return 0
 
 if __name__ == '__main__':
-    if '--version' in sys.argv:
+    if (len(sys.argv) < 2):
+        usage()
+        sys.exit(1)
+    elif '--version' in sys.argv:
         version()
         sys.exit(0)
     elif '--help' in sys.argv:
