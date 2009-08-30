@@ -39,11 +39,11 @@ def process_folder(_, dir_name, files):
             f.close()
 
 def main(args):
-    if(not len(args)):
-        usage()
-        return -1
-        
-    os.path.walk(args[0], process_folder, None)
+    for root, dirs, files in os.walk(args[0]):
+        for file_name in files:
+            print "file: %s in dir %s" % (file_name, os.path.join(root,file_name))
+        #if 'CVS' in dirs:
+        #    dirs.remove('CVS')
     return 0
 
 if __name__ == '__main__':
