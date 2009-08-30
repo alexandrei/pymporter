@@ -8,11 +8,11 @@ The final goal is to have a small script that imports and renames photos accordi
 import sys
 import EXIF
 
-__description = """Specify the input folder!"""
+__usage = """Specify the input folder!"""
 __version = """0.1"""
 
 def usage():
-	print __description
+	print __usage
 	
 def version():
 	print __version
