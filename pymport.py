@@ -19,11 +19,13 @@ def version():
     print __version
     
 def process_folder(_, dir_name, files):
+    print dir_name
     for fname in files:
         try:
-            f = open(fname)
+            f = open(dir_name + fname)
         except IOError:
             #print "Failed to open file %s" % fname
+            pass
         else:
             print "Opened file %s" % fname
             print EXIF.process_file(f)
@@ -34,7 +36,7 @@ def main(args):
         usage()
         return -1
         
-    os.path.walk('.', process_folder, None)
+    os.path.walk(args[0], process_folder, None)
     return 0
 
 if __name__ == '__main__':
