@@ -31,15 +31,24 @@ def main(args):
             file_name_lower = file_name.lower()
             if file_name_lower.endswith(__extensions):
                 input_details = Element("input")
-                output_details = Element("output")
-                jpeg_list.append(input_details)
-                jpeg_list.append(output_details)
-                
                 SubElement(input_details,"path",os.path.join(root,file_name))
                 SubElement(input_details,"name",file_name)
                 
+                output_details = Element("output")
+                
+                file_details = Element("file")
+                file_details.append(input_details)
+                file_details.append(output_details)
+                
+                jpeg_list.append(file_details)
+                
             if file_name_lower.endswith(__raw_extensions):
-                raw_input_file_list.append(os.path.join(root,file_name))
+                file_details = Element("file")               
+                SubElement(file_details,"path",os.path.join(root,file_name))
+                SubElement(file_details,"name",file_name)
+                
+                raw_list.append(file_details)
+                
                 #try:
                 #    f = open(os.path.join(root,file_name), 'rb')
                 #except IOError:
@@ -56,8 +65,6 @@ def main(args):
             #    print "Skip file %s" % os.path.join(root,file_name)
         #if 'CVS' in dirs:
         #    dirs.remove('CVS')
-        
-        print input_file_list
     return 0
 
 if __name__ == '__main__':
