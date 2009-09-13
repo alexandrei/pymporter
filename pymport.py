@@ -11,12 +11,9 @@ import EXIF
 from xml.etree.ElementTree import ElementTree, Element
 
 __usage = """Specify the input folder!"""
-__version = """0.1"""
+__version = """0.2"""
 __extensions = ('.jpg', '.jpeg')
 __raw_extensions = ('.orf')
-
-input_file_list = []
-raw_input_file_list = []
 
 def usage():
     print __usage
@@ -25,13 +22,22 @@ def version():
     print __version
 
 def main(args):
-    output = Element("files")
-    ElementTree(output).write(output_file)
+    process = Element("process")
+    jpeg_list = SubElement(process, "jpeg")
+    raw_list = SubElement(process, "raw")
+    #ElementTree(output).write(output_file)
     for root, dirs, files in os.walk(args[0]):
         for file_name in files:
             file_name_lower = file_name.lower()
             if file_name_lower.endswith(__extensions):
-                input_file_list.append(os.path.join(root,file_name))
+                input_details = Element("input")
+                output_details = Element("output")
+                jpeg_list.append(input_details)
+                jpeg_list.append(output_details)
+                
+                SubElement(input_details,"path",os.path.join(root,file_name))
+                SubElement(input_details,"name",file_name)
+                
             if file_name_lower.endswith(__raw_extensions):
                 raw_input_file_list.append(os.path.join(root,file_name))
                 #try:
