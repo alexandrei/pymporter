@@ -23,6 +23,26 @@ def version():
     
 def print_input_list(tree):
     dump(tree)
+    
+def get_exif_data(list):
+    files = list.getiterator("file")
+    for file in files:
+        input = file.find("input")
+        file_exif = SubElement(file, "exif")
+        try:
+            f = open(input.get("path"), 'rb')
+        except IOError:
+            print "Failed to open file %s" % input.get("path")
+        else:
+            print "Opened file %s" % input.get("path")
+            tags = EXIF.process_file(f, stop_tag='DateTimeOriginal', details = False)
+            try:
+                print tags['EXIF DateTimeOriginal']
+                file_exif.set("DateTimeOriginal", str(tags['EXIF DateTimeOriginal']))
+            except KeyError:
+                print "Failed to get 'EXIF DateTimeOriginal' for file %s" % input.get("path")
+            f.close()
+        
 
 def main(args):
     process = Element("process")
@@ -35,11 +55,8 @@ def main(args):
             if file_name_lower.endswith(__extensions):
                 input_details = Element("input", {"path":os.path.join(root,file_name), "name":file_name})
                 
-                output_details = Element("output")
-                
                 file_details = Element("file")
                 file_details.append(input_details)
-                file_details.append(output_details)
                 
                 jpeg_list.append(file_details)
                 
@@ -48,23 +65,7 @@ def main(args):
                 
                 raw_list.append(file_details)
                 
-                #try:
-                #    f = open(os.path.join(root,file_name), 'rb')
-                #except IOError:
-                #    print "Failed to open file %s" % os.path.join(root,file_name)
-                #else:
-                #    print "Opened file %s" % os.path.join(root,file_name)
-                #    tags = EXIF.process_file(f, stop_tag='DateTimeOriginal', details = False)
-                #    try:
-                #        print tags['EXIF DateTimeOriginal']
-                #    except KeyError:
-                #        print "Failed to get 'EXIF DateTimeOriginal' for file %s" % os.path.join(root,file_name)
-                #    f.close()
-            #else:
-            #    print "Skip file %s" % os.path.join(root,file_name)
-        #if 'CVS' in dirs:
-        #    dirs.remove('CVS')
-        
+    get_exif_data(jpeg_list)
     print_input_list(process)
     return 0
 
