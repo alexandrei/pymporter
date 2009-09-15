@@ -12,9 +12,10 @@ import EXIF
 from xml.etree.ElementTree import ElementTree, Element, SubElement, dump
 
 __usage = """Specify the input folder!"""
-__version = """0.2"""
+__version = """0.3"""
 __extensions = ('.jpg', '.jpeg')
 __raw_extensions = ('.orf')
+__tags = ["Image DateTime", "EXIF DateTimeOriginal", "DateTime"]
 
 def usage():
     print __usage
@@ -35,9 +36,10 @@ def sort_jpeg_list(list):
         data.append((key, elem))
         
     data.sort()
-    
-    #print data
+
     list[:] = [item[-1] for item in data]
+    
+
     
 def match_raw_files(raw_list, jpeg_list):
     jpegs = jpeg_list.getiterator("file")
@@ -71,14 +73,19 @@ def get_exif_data(list):
         except IOError:
             print "Failed to open file %s" % input.get("path")
         else:
-            #print "Opened file %s" % input.get("path")
-            tags = EXIF.process_file(f, stop_tag='DateTimeOriginal', details = False)
             try:
-                print tags['EXIF DateTimeOriginal']
-                file_exif.set("DateTimeOriginal", str(tags['EXIF DateTimeOriginal']))
-            except KeyError:
-                print "Failed to get 'EXIF DateTimeOriginal' for file %s" % input.get("path")
-            f.close()
+                tags = EXIF.process_file(f, details = False)
+                for tag in __tags:
+                    try:
+                        dt_value = str(tags[tag])
+                        break
+                    except:
+                        continue
+                if dt_value:
+                    file_exif.set("DateTime", dt_value)
+                    
+            finally:
+                f.close()
         
 
 def main(args):
