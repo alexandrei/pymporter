@@ -8,6 +8,7 @@ The final goal is to have a small script that imports and renames photos accordi
 import sys
 import os
 import copy
+import re
 import EXIF
 from xml.etree.ElementTree import ElementTree, Element, SubElement, dump
 
@@ -27,7 +28,20 @@ def print_input_list(tree):
     dump(tree)
     
 def build_output_names(list):
-    pass
+    files = list.getiterator("file")
+    
+    for file in files:
+        output = Element("output")
+        file.append(output)
+        
+        path = file.find("input").get("path")
+        path = os.path.split(path)[0]
+        ctime = file.find("exif").get("DateTime")
+        ctime = ctime.replace(':', '')
+        ctime = re.sub('[^\d]+', '_', ctime)
+        
+        output.set("path", path)
+        output.set("datetime", ctime)
 
 def sort_jpeg_list(list):
     data = []
@@ -114,6 +128,8 @@ def main(args):
     match_raw_files(raw_list, jpeg_list)
     
     sort_jpeg_list(jpeg_list)
+    
+    build_output_names(jpeg_list)
     
     print_input_list(process)
     
