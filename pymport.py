@@ -25,6 +25,20 @@ def version():
 def print_input_list(tree):
     dump(tree)
     
+def build_output_names(list):
+    pass
+
+def sort_jpeg_list(list):
+    data = []
+    for elem in list:
+        key = elem.find("input").get("path")
+        data.append((key, elem))
+        
+    data.sort()
+    
+    #print data
+    list[:] = [item[-1] for item in data]
+    
 def match_raw_files(raw_list, jpeg_list):
     jpegs = jpeg_list.getiterator("file")
     raws = raw_list.getiterator("raw")
@@ -91,6 +105,9 @@ def main(args):
     get_exif_data(jpeg_list)
     
     match_raw_files(raw_list, jpeg_list)
+    
+    sort_jpeg_list(jpeg_list)
+    
     print_input_list(process)
     
     #ElementTree(output).write(output_file)
