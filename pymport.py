@@ -34,7 +34,7 @@ def get_exif_data(list):
         except IOError:
             print "Failed to open file %s" % input.get("path")
         else:
-            print "Opened file %s" % input.get("path")
+            #print "Opened file %s" % input.get("path")
             tags = EXIF.process_file(f, stop_tag='DateTimeOriginal', details = False)
             try:
                 print tags['EXIF DateTimeOriginal']
@@ -48,7 +48,7 @@ def main(args):
     process = Element("process")
     jpeg_list = SubElement(process, "jpeg")
     raw_list = SubElement(process, "raw")
-    #ElementTree(output).write(output_file)
+    
     for root, dirs, files in os.walk(args[0]):
         for file_name in files:
             file_name_lower = file_name.lower()
@@ -67,6 +67,9 @@ def main(args):
                 
     get_exif_data(jpeg_list)
     print_input_list(process)
+    
+    #ElementTree(output).write(output_file)
+    
     return 0
 
 if __name__ == '__main__':
