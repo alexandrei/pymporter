@@ -61,7 +61,7 @@ def main(args):
                 jpeg_list.append(file_details)
                 
             if file_name_lower.endswith(__raw_extensions):
-                file_details = Element("file", {"path": os.path.join(root,file_name), "name":file_name})
+                file_details = Element("raw", {"path": os.path.join(root,file_name), "name":file_name})
                 
                 raw_list.append(file_details)
                 
