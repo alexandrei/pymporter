@@ -7,6 +7,7 @@ The final goal is to have a small script that imports and renames photos accordi
 
 import sys
 import os
+import copy
 import EXIF
 from xml.etree.ElementTree import ElementTree, Element, SubElement, dump
 
@@ -23,6 +24,28 @@ def version():
     
 def print_input_list(tree):
     dump(tree)
+    
+def match_raw_files(raw_list, jpeg_list):
+    jpegs = jpeg_list.getiterator("file")
+    raws = raw_list.getiterator("raw")
+    
+    if (len(jpegs) > 0) and (len(raws) > 0):
+        for jpeg in jpegs:
+            for raw in raws:
+                jpeg_path = jpeg.find("input").get("path")
+                if jpeg_path is not None:
+                    jpeg_path = os.path.splitext(jpeg_path)
+                    jpeg_path = jpeg_path[0].lower()
+                    
+                raw_path = raw.get("path")
+                if raw_path is not None:
+                    raw_path = os.path.splitext(raw_path)
+                    raw_path = raw_path[0].lower()
+                
+                if jpeg_path == raw_path:
+                    jpeg.append(copy.deepcopy(raw))
+                    raw_list.remove(raw)
+                    continue
     
 def get_exif_data(list):
     files = list.getiterator("file")
@@ -66,6 +89,8 @@ def main(args):
                 raw_list.append(file_details)
                 
     get_exif_data(jpeg_list)
+    
+    match_raw_files(raw_list, jpeg_list)
     print_input_list(process)
     
     #ElementTree(output).write(output_file)
