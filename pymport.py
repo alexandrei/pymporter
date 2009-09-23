@@ -66,6 +66,13 @@ def build_output_names(list):
         se = dt.split(':')[1] #seconds
 
         output.set("datetime", ctime)
+        output.set("year", y)
+        output.set("month", m)
+        output.set("day", d)
+        output.set("hour", hr)
+        output.set("minute", mi)
+        output.set("second", se)
+
 
 def sort_jpeg_list(list):
     data = []
