@@ -57,9 +57,9 @@ def build_output_names(list):
 
         #day
         if len(dd.split(':')[2]) < 2:
-          m = str('0') + dd.split(':')[2]
+          d = str('0') + dd.split(':')[2]
         else:
-          m = dd.split(':')[2]
+          d = dd.split(':')[2]
 
         hr = dt.split(':')[0] #hour
         mi = dt.split(':')[1] #minutes
