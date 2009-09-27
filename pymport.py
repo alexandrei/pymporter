@@ -7,12 +7,20 @@ The final goal is to have a small script that imports and renames photos accordi
 
 import sys
 import os
+import logging
 import copy
 import re
 import EXIF
 from datetime import datetime, timedelta
 from xml.etree.ElementTree import ElementTree, Element, SubElement, dump
 
+LEVELS = {
+  'debug': logging.DEBUG,
+  'info' : logging.INFO,
+  'error': logging.ERROR
+  }
+
+__logfile = "pymport.log"
 __usage = """Specify the input folder!"""
 __version = """0.3"""
 __extensions = ('.jpg', '.jpeg')
@@ -40,11 +48,11 @@ def create_groups(list, offset):
     for ofile in files:
         of_ctime = ofile.find("exif").get("DateTime")
         of_iso_time = datetime.strptime(of_ctime, "%Y:%m:%d %H:%M:%S")
-        
+
         current_group = Element("group", {"time":of_ctime})
         other_files_in_group = 0
         current_group.append(copy.deepcopy(ofile))
-        
+
         for file in files:
             if file != ofile:
                 ctime = file.find("exif").get("DateTime")
@@ -52,7 +60,7 @@ def create_groups(list, offset):
                 if (iso_time - of_iso_time) < offset:
                     other_files_in_group += 1
                     current_group.append(copy.deepcopy(file))
-        
+
         if other_files_in_group > 0:
             #add the current group to the groups list, and remove the ofile
             groups.append(current_group)
@@ -72,7 +80,7 @@ def add_output_date_time(list):
         path = file.find("input").get("path")
         path = os.path.split(path)[0]
         ctime = file.find("exif").get("DateTime")
-        
+
         datestr = ctime.split(' ')
         dd = datestr[0] #date
         dt = datestr[1] #time
@@ -168,6 +176,23 @@ def get_exif_data(list):
 
 
 def main(args):
+    
+    #setup logging
+    logging.basicConfig(
+      filename=__logfile,
+      level = logging.DEBUG,
+      )
+    
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(messages)s')
+    console.setFormatter(formatter)
+    logging.getLogger('').addHandler(console)
+    
+    logging.info('info message')
+    logging.error('error message')
+    logging.debug('debug message')
+    
     process = Element("process")
     jpeg_list = SubElement(process, "jpeg")
     raw_list = SubElement(process, "raw")
@@ -195,7 +220,7 @@ def main(args):
     sort_jpeg_list(jpeg_list)
 
     add_output_date_time(jpeg_list)
-    
+
     create_groups(jpeg_list, __groups_time_delta)
 
     print_input_list(process)
