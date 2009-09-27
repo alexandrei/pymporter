@@ -10,6 +10,7 @@ import os
 import copy
 import re
 import EXIF
+from datetime import datetime, timedelta
 from xml.etree.ElementTree import ElementTree, Element, SubElement, dump
 
 __usage = """Specify the input folder!"""
@@ -18,6 +19,7 @@ __extensions = ('.jpg', '.jpeg')
 __raw_extensions = ('.orf')
 __tags = ["Image DateTime", "EXIF DateTimeOriginal", "DateTime"]
 __base_gallery_path = "./output"
+__groups_time_delta = timedelta(hours = 6)
 
 def usage():
     print __usage
@@ -28,7 +30,39 @@ def version():
 def print_input_list(tree):
     dump(tree)
 
-def build_output_names(list):
+def create_groups(list, offset):
+    files = list.getiterator("file")
+    groups = Element("groups")
+    list.append(groups)
+    default_group = Element("group", {"name":"default"})
+    groups.append(default_group)
+
+    for ofile in files:
+        of_ctime = ofile.find("exif").get("DateTime")
+        of_iso_time = datetime.strptime(of_ctime, "%Y:%m:%d %H:%M:%S")
+        
+        current_group = Element("group", {"time":of_ctime})
+        other_files_in_group = 0
+        current_group.append(copy.deepcopy(ofile))
+        
+        for file in files:
+            if file != ofile:
+                ctime = file.find("exif").get("DateTime")
+                iso_time = datetime.strptime(ctime, "%Y:%m:%d %H:%M:%S")
+                if (iso_time - of_iso_time) < offset:
+                    other_files_in_group += 1
+                    current_group.append(copy.deepcopy(file))
+        
+        if other_files_in_group > 0:
+            #add the current group to the groups list, and remove the ofile
+            groups.append(current_group)
+            list.remove(ofile)
+        else:
+            current_group = None
+            default_group.append(copy.deepcopy(ofile))
+            list.remove(ofile)
+
+def add_output_date_time(list):
     files = list.getiterator("file")
 
     for file in files:
@@ -38,7 +72,7 @@ def build_output_names(list):
         path = file.find("input").get("path")
         path = os.path.split(path)[0]
         ctime = file.find("exif").get("DateTime")
-
+        
         datestr = ctime.split(' ')
         dd = datestr[0] #date
         dt = datestr[1] #time
@@ -160,7 +194,9 @@ def main(args):
 
     sort_jpeg_list(jpeg_list)
 
-    build_output_names(jpeg_list)
+    add_output_date_time(jpeg_list)
+    
+    create_groups(jpeg_list, __groups_time_delta)
 
     print_input_list(process)
 
