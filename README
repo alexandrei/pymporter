@@ -1,4 +1,41 @@
 
 pymport v0.2b1
 
-EXIF.py from http://www.dudek.org/blog/154
+A "wanna'be" custom (and advanced) photo file importer.
+
+Required Python version:
+	- tested with Python 2.6.2, on Linux
+
+Other libraries:
+- EXIF.py from http://www.dudek.org/blog/154
+
+Reasons:
+- I want to learn Python
+- there is no current software (freeware, or FOSS), that does what I want, regarding photo files import
+- what I want:
+	1. Select the source folder
+	2. Select the base output folder (the root folder of your photo collection)
+	3. Program reads input files, reads EXIF date/time data (several fields, if not, file timestamp)
+	4. Based on a time offset (ex. 6 hours), it groups the files (starting from a file X, add all other files that have timestamp < timestamp(x) + offset)
+	5. Allow to 'lock' some groups, then to change the time offset. Locked groups are not changed
+	6. Repeat steps 4 and 5 until you are satisfied with the grouping
+	7. Remaining photos are added to a 'default' group
+	8. Name each group with a descriptive name (the event)
+	9. Program computes the output file names, and displays a table with input/output names, with the ability to check/uncheck files to be processed
+	10. The program proceeds to rename the selected files, and moves them to the appropriate folder
+	
+- what else:
+	- [REQUIRED] thumbnails of the first/last and a number of random photos are displayed in the GUI, at step 4
+	- [MAYBE] allow user to override some names/paths, in the list at step 9
+	- [MAYBE] display thumbnails at step 9
+	- [MAYBE] allow user to config the renaming pattern from the GUI (maybe including custom pattern per group)
+	- [MAYBE] allow keyword tagging per group, in step 4
+	- [REQUIRED] pair jpeg and raw files, by names, and move/rename the raw accordingly; unpaired raws are added to the default group. use the file timestamp if anything else fails
+	- [MAYBE] read EXIF data from the raw files too 
+
+Some history :) :
+
+The previous version (something along the lines of v0.1) used xml based internal storage, for the input/output file names.
+For the v0.2 version, I plan to use native Python objects, for speed reason. Still not sure about the internal details.. but it's slowly getting shape.
+
+In the future, a GUI is planned, based on Qt4.
