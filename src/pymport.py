@@ -11,6 +11,7 @@ import logging
 import copy
 import re
 import EXIF
+
 from datetime import datetime, timedelta
 from xml.etree.ElementTree import ElementTree, Element, SubElement, dump
 
@@ -28,6 +29,48 @@ __raw_extensions = ('.orf')
 __tags = ["Image DateTime", "EXIF DateTimeOriginal", "DateTime"]
 __base_gallery_path = "./output"
 __groups_time_delta = timedelta(hours = 6)
+
+class BaseFile:
+    name = ""
+    extension = ""
+    path = ""
+    
+    def __init__(self, filepath = None):
+        self.path = filepath
+        self._get_extension()
+        self._get_name()
+        
+    def _get_extension(self):
+        pass
+    
+    def _get_name(self):
+        pass
+
+class JpegFile(BaseFile):
+    _has_raw = None
+    _has_group = None
+    
+    def __init__(self, filepath = None):
+        BaseFile.__init__(self, filepath)
+        
+    def set_linked_raw(self, raw_file = None):
+        this._has_raw = raw_file
+        
+    def set_group(self, group = None):
+        this._has_group = group
+        
+    def _get_exif_data(self):
+        pass
+    
+class RawFile(BaseFile):
+    def __init__(self, filepath = None):
+        BaseFile.__init__(self, filepath)
+        
+class FilesGroup(list):
+    name = ""
+    start_time = ""
+    is_locked = False
+
 
 def usage():
     print __usage
@@ -193,6 +236,8 @@ def main(args):
     logging.error('error message')
     logging.debug('debug message')
     
+    
+    
     process = Element("process")
     jpeg_list = SubElement(process, "jpeg")
     raw_list = SubElement(process, "raw")
@@ -230,6 +275,7 @@ def main(args):
     return 0
 
 if __name__ == '__main__':
+    
     if (len(sys.argv) < 2):
         usage()
         sys.exit(1)
