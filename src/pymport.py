@@ -89,16 +89,6 @@ class FilesGroup(list):
     start_time = ""
     is_locked = False
 
-
-def usage():
-    print __usage
-
-def version():
-    print __version
-
-def print_input_list(tree):
-    dump(tree)
-
 def create_groups(list, offset):
     files = list.getiterator("file")
     groups = Element("groups")
