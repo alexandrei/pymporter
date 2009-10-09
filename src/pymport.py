@@ -49,6 +49,7 @@ class BaseFile:
 class JpegFile(BaseFile):
     _has_raw = None
     _has_group = None
+    _iso_time = ""
     
     def __init__(self, filepath = None):
         BaseFile.__init__(self, filepath)
@@ -59,8 +60,25 @@ class JpegFile(BaseFile):
     def set_group(self, group = None):
         self._has_group = group
         
-    def _get_exif_data(self):
-        pass
+    def get_exif_data(self):
+        try:
+            f = open(self.path, 'rb')
+        except IOError:
+            print "Failed to open file %s" % self.path
+        else:
+            try:
+                tags = EXIF.process_file(f, details = False)
+                for tag in g_tags:
+                    try:
+                        dt_value = str(tags[tag])
+                        break
+                    except:
+                        continue
+                if dt_value:
+                    self._iso_time = datetime.strptime(dt_value, "%Y:%m:%d %H:%M:%S")
+
+            finally:
+                f.close()
     
 class RawFile(BaseFile):
     def __init__(self, filepath = None):
