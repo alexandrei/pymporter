@@ -8,12 +8,10 @@ The final goal is to have a small script that imports and renames photos accordi
 import sys
 import os
 import logging
-import copy
 import re
 import EXIF
 
 from datetime import datetime, timedelta
-from xml.etree.ElementTree import ElementTree, Element, SubElement, dump
 
 LEVELS = {
   'debug': logging.DEBUG,
