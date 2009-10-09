@@ -22,12 +22,9 @@ LEVELS = {
   }
 
 __logfile = "pymport.log"
-__usage = """Specify the input folder!"""
-__version = """0.3"""
-__extensions = ('.jpg', '.jpeg')
-__raw_extensions = ('.orf')
-__tags = ["Image DateTime", "EXIF DateTimeOriginal", "DateTime"]
-__base_gallery_path = "./output"
+g_extensions = ('.jpg', '.jpeg')
+g_raw_extensions = ('.orf')
+g_tags = ["Image DateTime", "EXIF DateTimeOriginal", "DateTime"]
 __groups_time_delta = timedelta(hours = 6)
 
 class BaseFile:
