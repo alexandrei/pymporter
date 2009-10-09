@@ -1,5 +1,5 @@
 
-pymport v0.2b1
+pymport v0.2b2
 
 A "wanna'be" custom (and advanced) photo file importer.
 
@@ -23,7 +23,7 @@ Reasons:
 	8. Name each group with a descriptive name (the event)
 	9. Program computes the output file names, and displays a table with input/output names, with the ability to check/uncheck files to be processed
 	10. The program proceeds to rename the selected files, and moves them to the appropriate folder
-	
+
 - what else:
 	- [REQUIRED] thumbnails of the first/last and a number of random photos are displayed in the GUI, at step 4
 	- [MAYBE] allow user to override some names/paths, in the list at step 9
@@ -31,7 +31,7 @@ Reasons:
 	- [MAYBE] allow user to config the renaming pattern from the GUI (maybe including custom pattern per group)
 	- [MAYBE] allow keyword tagging per group, in step 4
 	- [REQUIRED] pair jpeg and raw files, by names, and move/rename the raw accordingly; unpaired raws are added to the default group. use the file timestamp if anything else fails
-	- [MAYBE] read EXIF data from the raw files too 
+	- [MAYBE] read EXIF data from the raw files too
 
 Some history :) :
 
