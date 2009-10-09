@@ -41,10 +41,10 @@ class BaseFile:
         self._get_name()
         
     def _get_extension(self):
-        pass
+        self.extension = os.path.splitext(self.path)[1] #path has to be a file path, not a dir path!
     
     def _get_name(self):
-        pass
+        self.name = os.path.split(self.path)[1] 
 
 class JpegFile(BaseFile):
     _has_raw = None
