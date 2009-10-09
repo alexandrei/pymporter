@@ -53,8 +53,8 @@ class JpegFile(BaseFile):
     def __init__(self, filepath = None):
         BaseFile.__init__(self, filepath)
         
-    def set_linked_raw(self, raw_file = None):
-        this._has_raw = raw_file
+    def set_raw(self, raw_file = None):
+        self._has_raw = raw_file
         
     def set_group(self, group = None):
         this._has_group = group
