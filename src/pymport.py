@@ -27,6 +27,44 @@ g_raw_extensions = ('.orf')
 g_tags = ["Image DateTime", "EXIF DateTimeOriginal", "DateTime"]
 __groups_time_delta = timedelta(hours = 6)
 
+class ConverterApp():
+    from_root = ""
+    to_root = ""
+    jpeg_list = []
+    raw_list = []
+    group = []
+    
+    def __init__(self, from_root = None, to_root = None):
+        self.from_root = from_root
+        self.to_root = to_root
+        
+    def get_files(self):
+        for root, dirs, files in os.walk(self.from_root):
+            for file_name in files:
+                file_name_lower = file_name.lower()
+                if file_name_lower.endswith(g_extensions):  
+                    self.jpeg_list.append(JpegFile(os.path.join(root,file_name)))
+    
+                if file_name_lower.endswith(g_raw_extensions):
+                        self.raw_list.append(RawFile(os.path.join(root, file_name)))
+                        
+    def read_meta(self):
+        for jpeg in self.jpeg_list:
+            jpeg.get_exif_data()
+                        
+    def match_raw(self):
+        for jpeg in self.jpeg_list:
+            jpeg_path = os.path.splitext(jpeg.path)
+            jpeg_path = jpeg_path[0].lower()
+            for raw in self.raw_list:
+                raw_path = os.path.splitext(raw.path)
+                raw_path = raw_path[0].lower()
+                
+                if jpeg_path == raw_path:
+                    jpeg.set_raw(raw)
+                    self.raw_list.remove(raw)
+        
+
 class BaseFile:
     name = ""
     extension = ""
