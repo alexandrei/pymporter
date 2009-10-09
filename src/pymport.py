@@ -57,7 +57,7 @@ class JpegFile(BaseFile):
         self._has_raw = raw_file
         
     def set_group(self, group = None):
-        this._has_group = group
+        self._has_group = group
         
     def _get_exif_data(self):
         pass
