@@ -86,13 +86,13 @@ class ConverterApp():
         bucket_group.name = "Bucket"
                     
         #create groups, with the selected files
-        for file_a in regroup_files_list:
+        for file_a in list(regroup_files_list):#use a copy of regroup_files_list for the iteration items, so they don't get changed
             temp_group = FilesGroup()
             temp_group.start_time = file_a._iso_time
             temp_group.add(file_a)
-            regroup_files_list.remove(file_a)
+            regroup_files_list.remove(file_a) #when we remove an element, we do it from the original list. the copy remains unchanged
             
-            for file_b in regroup_files_list:
+            for file_b in list(regroup_files_list): #again we make a copy, but this time regroup_files_list is already modif, with file_a removed
                 #if file_a != file_b:#no need for this, since we remove file_a from the list before the second loop
                 if (file_b._iso_time - file_a._iso_time) < time_offset:
                     temp_group.add(file_b)
