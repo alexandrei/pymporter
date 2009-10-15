@@ -9,6 +9,7 @@ import sys
 import os
 import logging
 import re
+import copy
 import EXIF
 
 from datetime import datetime, timedelta
@@ -70,7 +71,7 @@ class ConverterApp():
         regroup_files_list = []
         
         if len(self.groups) == 0:
-            regroup_files_list = self.jpeg_list
+            regroup_files_list = copy.copy(self.jpeg_list) #on first 'regroup', we start with a copy of jpeg_list, so that we do not change it further on
             
         else:
             for group in self.groups:
@@ -110,9 +111,6 @@ class ConverterApp():
             
         if len(bucket_group) > 0:
             self.groups.append(bucket_group)
-                
-                    
-            
         
 
 class BaseFile:
@@ -180,38 +178,6 @@ class FilesGroup(list):
     def add(self, *args):
         self.extend(args)
         return None
-
-def create_groups(list, offset):
-    files = list.getiterator("file")
-    groups = Element("groups")
-    list.append(groups)
-    default_group = Element("group", {"name":"default"})
-    groups.append(default_group)
-
-    for ofile in files:
-        of_ctime = ofile.find("exif").get("DateTime")
-        of_iso_time = datetime.strptime(of_ctime, "%Y:%m:%d %H:%M:%S")
-
-        current_group = Element("group", {"time":of_ctime})
-        other_files_in_group = 0
-        current_group.append(copy.deepcopy(ofile))
-
-        for file in files:
-            if file != ofile:
-                ctime = file.find("exif").get("DateTime")
-                iso_time = datetime.strptime(ctime, "%Y:%m:%d %H:%M:%S")
-                if (iso_time - of_iso_time) < offset:
-                    other_files_in_group += 1
-                    current_group.append(copy.deepcopy(file))
-
-        if other_files_in_group > 0:
-            #add the current group to the groups list, and remove the ofile
-            groups.append(current_group)
-            list.remove(ofile)
-        else:
-            current_group = None
-            default_group.append(copy.deepcopy(ofile))
-            list.remove(ofile)
 
 def add_output_date_time(list):
     files = list.getiterator("file")
@@ -305,7 +271,10 @@ def main(args):
 #    capp.groups.append(g2)
 #    capp.groups.append(g3)
     
-    capp.regroup(timedelta(hours = 6))
+    capp.regroup(timedelta(minutes = 30))
+    print ("with 30 minutes offset we have %d groups" % len(capp.groups))
+    capp.regroup(timedelta(hours = 10))
+    print ("with 2 hours offset we have %d groups" % len(capp.groups))
  
     return 0
 
