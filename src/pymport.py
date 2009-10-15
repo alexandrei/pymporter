@@ -30,7 +30,7 @@ class ConverterApp():
     to_root = ""
     jpeg_list = []
     raw_list = []
-    group = []
+    groups = []
     
     def __init__(self, from_root = None, to_root = None):
         self.from_root = from_root
@@ -61,6 +61,58 @@ class ConverterApp():
                 if jpeg_path == raw_path:
                     jpeg.set_raw(raw)
                     self.raw_list.remove(raw)
+                    
+    def _sort_by_timestamp(self, file_a, file_b):
+        return file_a._iso_time - file_b._iso_time
+                    
+    def regroup(self, time_offset):
+        #create list of files to be used for regrouping
+        regroup_files_list = []
+        
+        if len(self.groups) == 0:
+            regroup_files_list = self.jpeg_list
+            
+        else:
+            for group in self.groups:
+                if not group.is_locked:
+                    #add groups files to the list, then delete group
+                    for file in group:
+                        regroup_files_list.append(file)
+                        
+                    self.groups.remove(group)
+                    
+        bucket_group = FilesGroup() #if a group has less than 5 files, they are stored here
+        bucket_group.name = "Bucket"
+                    
+        #create groups, with the selected files
+        for file_a in regroup_files_list:
+            temp_group = FilesGroup()
+            temp_group.start_time = file_a._iso_time
+            temp_group.add(file_a)
+            regroup_files_list.remove(file_a)
+            
+            for file_b in regroup_files_list:
+                #if file_a != file_b:#no need for this, since we remove file_a from the list before the second loop
+                if (file_b._iso_time - file_a._iso_time) < time_offset:
+                    temp_group.add(file_b)
+                    regroup_files_list.remove(file_b)
+                    
+            if len(temp_group) < 5:
+                #move files to bucket
+                for file in temp_group:
+                    bucket_group.add(file)
+                    #temp_group.remove(file)    
+                
+            else:
+                self.groups.append(temp_group)
+                
+            del temp_group #or maybe temp_group = None
+            
+        if len(bucket_group) > 0:
+            self.groups.append(bucket_group)
+                
+                    
+            
         
 
 class BaseFile:
@@ -121,6 +173,13 @@ class FilesGroup(list):
     name = ""
     start_time = ""
     is_locked = False
+    
+    def len(self):
+        return len(self)
+    
+    def add(self, *args):
+        self.extend(args)
+        return None
 
 def create_groups(list, offset):
     files = list.getiterator("file")
@@ -223,6 +282,30 @@ def main(args):
     capp.get_files()
     capp.read_meta()
     capp.match_raw()
+    
+    ##create some fake groups
+    
+#    g1 = FilesGroup()
+#    g1.name = "Group 1"
+#    g1.add(capp.jpeg_list[0])
+#    g1.add(capp.jpeg_list[1])
+#    
+#    g2 = FilesGroup()
+#    g2.name = "Group 2"
+#    g2.is_locked = True
+#    g2.add(capp.jpeg_list[2])
+#    g2.add(capp.jpeg_list[3])
+#    
+#    g3 = FilesGroup()
+#    g3.name = "Group 3"
+#    g3.add(capp.jpeg_list[4])
+#    g3.add(capp.jpeg_list[5])
+#    
+#    capp.groups.append(g1)
+#    capp.groups.append(g2)
+#    capp.groups.append(g3)
+    
+    capp.regroup(timedelta(hours = 6))
  
     return 0
 
