@@ -10,6 +10,7 @@ import os
 import logging
 import re
 import copy
+from collections import defaultdict
 import EXIF
 
 from datetime import datetime, timedelta
@@ -63,9 +64,25 @@ class ConverterApp():
                     jpeg.set_raw(raw)
                     self.raw_list.remove(raw)
                     
-    def _sort_by_timestamp(self, file_a, file_b):
-        return file_a._iso_time - file_b._iso_time
-                    
+    def time_offsets(self, files, offset):
+    
+        files = sorted(files, key=lambda x:x._iso_time)
+    
+        group = []   
+        _iso_time = 0
+    
+        for f in files:
+            if f._iso_time < _iso_time + offset:
+                group.append(f)
+            else:
+                yield group
+                _iso_time = f._iso_time
+                group = [_iso_time]
+        else:
+            yield group
+    
+    
+                        
     def regroup(self, time_offset):
         #create list of files to be used for regrouping
         regroup_files_list = []
@@ -82,33 +99,77 @@ class ConverterApp():
                         
                     self.groups.remove(group)
                     
+#        for g in self.time_offsets(regroup_files_list, time_offset):
+#            print g
+                    
         bucket_group = FilesGroup() #if a group has less than 5 files, they are stored here
         bucket_group.name = "Bucket"
-                    
-        #create groups, with the selected files
-        for file_a in list(regroup_files_list):#use a copy of regroup_files_list for the iteration items, so they don't get changed
+        
+        while len(regroup_files_list) > 0:
+            file_a = regroup_files_list[0]
+            regroup_files_list.remove(file_a)
+            
             temp_group = FilesGroup()
             temp_group.start_time = file_a._iso_time
             temp_group.add(file_a)
-            regroup_files_list.remove(file_a) #when we remove an element, we do it from the original list. the copy remains unchanged
+
+            #manually manage the list index when iterating for file_b, because we're removing files
+            i = 0
             
-            for file_b in list(regroup_files_list): #again we make a copy, but this time regroup_files_list is already modif, with file_a removed
-                #if file_a != file_b:#no need for this, since we remove file_a from the list before the second loop
-                if (file_b._iso_time - file_a._iso_time) < time_offset:
+            while True:
+                try:
+                    file_b = regroup_files_list[i]
+                except IndexError:
+                    break
+                
+                timediff = file_a._iso_time - file_b._iso_time              
+                if timediff.days < 0 or timediff.seconds < 0:
+                    timediff = file_b._iso_time - file_a._iso_time
+                
+                if timediff < time_offset:
                     temp_group.add(file_b)
                     regroup_files_list.remove(file_b)
+                    continue # :D we reuse the old position, because all elements shifted to the left
                     
-            if len(temp_group) < 5:
-                #move files to bucket
-                for file in temp_group:
-                    bucket_group.add(file)
-                    #temp_group.remove(file)    
-                
-            else:
-                self.groups.append(temp_group)
-                
-            del temp_group #or maybe temp_group = None
-            
+                else:
+                    i += 1 #the index is increased normally
+
+            self.groups.append(temp_group)
+        
+            #move files to bucket                    
+#            if len(temp_group) < 5:
+#                for file in temp_group:
+#                    bucket_group.add(file)
+#                    #temp_group.remove(file)    
+#            else:
+#                self.groups.append(temp_group)      
+               
+        #del temp_group #or maybe temp_group = None
+                    
+        #create groups, with the selected files
+#        for file_a in list(regroup_files_list):#use a copy of regroup_files_list for the iteration items, so they don't get changed
+#            temp_group = FilesGroup()
+#            temp_group.start_time = file_a._iso_time
+#            temp_group.add(file_a)
+#            regroup_files_list.remove(file_a) #when we remove an element, we do it from the original list. the copy remains unchanged
+#            
+#            for file_b in list(regroup_files_list): #again we make a copy, but this time regroup_files_list is already modif, with file_a removed
+#                #if file_a != file_b:#no need for this, since we remove file_a from the list before the second loop
+#                if (file_b._iso_time - file_a._iso_time) < time_offset:
+#                    temp_group.add(file_b)
+#                    regroup_files_list.remove(file_b)
+#                    
+#            if len(temp_group) < 5:
+#                #move files to bucket
+#                for file in temp_group:
+#                    bucket_group.add(file)
+#                    #temp_group.remove(file)    
+#                
+#            else:
+#                self.groups.append(temp_group)
+#                
+#            del temp_group #or maybe temp_group = None
+#            
         if len(bucket_group) > 0:
             self.groups.append(bucket_group)
         
@@ -271,10 +332,33 @@ def main(args):
 #    capp.groups.append(g2)
 #    capp.groups.append(g3)
     
-    capp.regroup(timedelta(minutes = 30))
-    print ("with 30 minutes offset we have %d groups" % len(capp.groups))
-    capp.regroup(timedelta(hours = 10))
-    print ("with 2 hours offset we have %d groups" % len(capp.groups))
+    capp.regroup(timedelta(minutes = 10))
+    print ("with 15 minutes offset we have %d groups" % len(capp.groups))
+    
+    for group in capp.groups:
+        print "\tgroup %s has %d files" % (group.name, len(group))
+        for file in group:
+            print "\t\t", file.name, file._iso_time
+    
+    print "\n \n"
+#    
+#    capp.regroup(timedelta(hours = 2))
+#    print ("with 2 hours offset we have %d groups" % len(capp.groups))
+#    
+#    for group in capp.groups:
+#        print "\tgroup %s has %d files" % (group.name, len(group))
+#        for file in group:
+#            print "\t\t", file.name, file._iso_time
+#            
+#    print "\n \n"
+#    
+    capp.regroup(timedelta(days = 7))
+    print ("with 7 days offset we have %d groups" % len(capp.groups))
+    
+    for group in capp.groups:
+        print "\tgroup %s has %d files" % (group.name, len(group))
+        for file in group:
+            print "\t\t", file.name, file._iso_time
  
     return 0
 
