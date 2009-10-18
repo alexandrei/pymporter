@@ -256,17 +256,20 @@ def main(args):
             print "\t\t", file.name, file._iso_time
     
     print "\n \n"
-#    
-#    capp.regroup(timedelta(hours = 2))
-#    print ("with 2 hours offset we have %d groups" % len(capp.groups))
-#    
-#    for group in capp.groups:
-#        print "\tgroup %s has %d files" % (group.name, len(group))
-#        for file in group:
-#            print "\t\t", file.name, file._iso_time
-#            
-#    print "\n \n"
-#    
+    
+    #test lock group index 3
+    #capp.groups[3].is_locked = True
+    
+    capp.regroup(timedelta(hours = 2))
+    print ("with 2 hours offset we have %d groups" % len(capp.groups))
+    
+    for group in capp.groups:
+        print "\tgroup %s has %d files" % (group.name, len(group))
+        for file in group:
+            print "\t\t", file.name, file._iso_time
+            
+    print "\n \n"
+    
     capp.regroup(timedelta(days = 7))
     print ("with 7 days offset we have %d groups" % len(capp.groups))
     
