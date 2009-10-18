@@ -60,42 +60,10 @@ class ConverterApp():
                 if jpeg_path == raw_path:
                     jpeg.set_raw(raw)
                     self.raw_list.remove(raw)
-                    
-    def time_offsets(self, files, offset):
-    
-        files = sorted(files, key=lambda x:x._iso_time)
-    
-        group = []   
-        _iso_time = 0
-    
-        for f in files:
-            if f._iso_time < _iso_time + offset:
-                group.append(f)
-            else:
-                yield group
-                _iso_time = f._iso_time
-                group = [_iso_time]
-        else:
-            yield group
-    
-    def sort_by_iso_time(self, file_a, file_b):
-        t_a = file_a._iso_time
-        t_b = file_b._iso_time
-        
-        if t_a > t_b:
-            return -1
-        
-        if t_a < t_b:
-            return 1
-        
-        if t_a == t_b:
-            return 0
-                        
+                                         
     def regroup(self, time_offset):
         #create list of files to be used for regrouping
         regroup_files_list = []
-        
-        print "initial group count %d" % len(self.groups)
         
         if len(self.groups) == 0:
             regroup_files_list = copy.copy(self.jpeg_list) #on first 'regroup', we start with a copy of jpeg_list, so that we do not change it further on
