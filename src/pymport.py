@@ -81,23 +81,46 @@ class ConverterApp():
         else:
             yield group
     
-    
+    def sort_by_iso_time(self, file_a, file_b):
+        t_a = file_a._iso_time
+        t_b = file_b._iso_time
+        
+        if t_a > t_b:
+            return -1
+        
+        if t_a < t_b:
+            return 1
+        
+        if t_a == t_b:
+            return 0
                         
     def regroup(self, time_offset):
         #create list of files to be used for regrouping
         regroup_files_list = []
         
+        print "initial group count %d" % len(self.groups)
+        
         if len(self.groups) == 0:
             regroup_files_list = copy.copy(self.jpeg_list) #on first 'regroup', we start with a copy of jpeg_list, so that we do not change it further on
             
         else:
-            for group in self.groups:
-                if not group.is_locked:
-                    #add groups files to the list, then delete group
-                    for file in group:
-                        regroup_files_list.append(file)
-                        
+            i = 0
+            while True:
+                try:
+                    group = self.groups[i]
+                except IndexError:
+                    break
+                
+                if group.is_locked == False:
+                    regroup_files_list.extend(group)                    
                     self.groups.remove(group)
+                    continue
+                else:
+                    i += 1
+                    
+        #regroup_files_list.sort(cmp=self.sort_by_iso_time)
+        print "initial list length: %d" % len(regroup_files_list)
+        print "update group count %d" % len(self.groups)
                     
         bucket_group = FilesGroup() #if a group has less than 5 files, they are stored here
         bucket_group.name = "Bucket"
@@ -210,51 +233,6 @@ class FilesGroup(list):
     def add(self, *args):
         self.extend(args)
         return None
-
-def add_output_date_time(list):
-    files = list.getiterator("file")
-
-    for file in files:
-        output = Element("output")
-        file.append(output)
-
-        path = file.find("input").get("path")
-        path = os.path.split(path)[0]
-        ctime = file.find("exif").get("DateTime")
-
-        datestr = ctime.split(' ')
-        dd = datestr[0] #date
-        dt = datestr[1] #time
-
-        ctime = ctime.replace(':', '')
-        ctime = re.sub('[^\d]+', '_', ctime)
-
-        #year
-        y = dd.split(':')[0]
-
-        #month
-        if len(dd.split(':')[1]) < 2:
-          m = str('0') + dd.split(':')[1]
-        else:
-          m = dd.split(':')[1]
-
-        #day
-        if len(dd.split(':')[2]) < 2:
-          d = str('0') + dd.split(':')[2]
-        else:
-          d = dd.split(':')[2]
-
-        hr = dt.split(':')[0] #hour
-        mi = dt.split(':')[1] #minutes
-        se = dt.split(':')[1] #seconds
-
-        output.set("datetime", ctime)
-        output.set("year", y)
-        output.set("month", m)
-        output.set("day", d)
-        output.set("hour", hr)
-        output.set("minute", mi)
-        output.set("second", se)
 
 def main(args):
     
