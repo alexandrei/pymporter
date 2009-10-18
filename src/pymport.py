@@ -8,9 +8,7 @@ The final goal is to have a small script that imports and renames photos accordi
 import sys
 import os
 import logging
-import re
 import copy
-from collections import defaultdict
 import EXIF
 
 from datetime import datetime, timedelta
@@ -25,7 +23,6 @@ __logfile = "pymport.log"
 g_extensions = ('.jpg', '.jpeg')
 g_raw_extensions = ('.orf')
 g_tags = ["Image DateTime", "EXIF DateTimeOriginal", "DateTime"]
-__groups_time_delta = timedelta(hours = 6)
 
 class ConverterApp():
     from_root = ""
