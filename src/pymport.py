@@ -24,6 +24,10 @@ g_extensions = ('.jpg', '.jpeg')
 g_raw_extensions = ('.orf')
 g_tags = ["Image DateTime", "EXIF DateTimeOriginal", "DateTime"]
 
+c_bucket_group_enabled = False
+c_bucket_group_name = "Bucket"
+c_bucket_group_min_count = 5
+
 class ConverterApp():
     from_root = ""
     to_root = ""
@@ -83,12 +87,8 @@ class ConverterApp():
                 else:
                     i += 1
                     
-        #regroup_files_list.sort(cmp=self.sort_by_iso_time)
-        print "initial list length: %d" % len(regroup_files_list)
-        print "update group count %d" % len(self.groups)
-                    
-        bucket_group = FilesGroup() #if a group has less than 5 files, they are stored here
-        bucket_group.name = "Bucket"
+        bucket_group = FilesGroup()
+        bucket_group.name = c_bucket_group_name
         
         while len(regroup_files_list) > 0:
             file_a = regroup_files_list[0]
@@ -120,14 +120,15 @@ class ConverterApp():
                     i += 1 #the index is increased normally
 
             self.groups.append(temp_group)
-        
-            #move files to bucket                    
-#            if len(temp_group) < 5:
-#                for file in temp_group:
-#                    bucket_group.add(file)
-#                    #temp_group.remove(file)    
-#            else:
-#                self.groups.append(temp_group)      
+
+            #move files to bucket
+            if c_bucket_group_enabled == True:                    
+                if len(temp_group) < c_bucket_group_min_count:
+                    for file in temp_group:
+                        bucket_group.add(file)
+                        temp_group.remove(file)    
+                else:
+                    self.groups.append(temp_group)      
                          
         if len(bucket_group) > 0:
             self.groups.append(bucket_group)
