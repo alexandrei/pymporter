@@ -99,9 +99,6 @@ class ConverterApp():
                         
                     self.groups.remove(group)
                     
-#        for g in self.time_offsets(regroup_files_list, time_offset):
-#            print g
-                    
         bucket_group = FilesGroup() #if a group has less than 5 files, they are stored here
         bucket_group.name = "Bucket"
         
@@ -143,33 +140,7 @@ class ConverterApp():
 #                    #temp_group.remove(file)    
 #            else:
 #                self.groups.append(temp_group)      
-               
-        #del temp_group #or maybe temp_group = None
-                    
-        #create groups, with the selected files
-#        for file_a in list(regroup_files_list):#use a copy of regroup_files_list for the iteration items, so they don't get changed
-#            temp_group = FilesGroup()
-#            temp_group.start_time = file_a._iso_time
-#            temp_group.add(file_a)
-#            regroup_files_list.remove(file_a) #when we remove an element, we do it from the original list. the copy remains unchanged
-#            
-#            for file_b in list(regroup_files_list): #again we make a copy, but this time regroup_files_list is already modif, with file_a removed
-#                #if file_a != file_b:#no need for this, since we remove file_a from the list before the second loop
-#                if (file_b._iso_time - file_a._iso_time) < time_offset:
-#                    temp_group.add(file_b)
-#                    regroup_files_list.remove(file_b)
-#                    
-#            if len(temp_group) < 5:
-#                #move files to bucket
-#                for file in temp_group:
-#                    bucket_group.add(file)
-#                    #temp_group.remove(file)    
-#                
-#            else:
-#                self.groups.append(temp_group)
-#                
-#            del temp_group #or maybe temp_group = None
-#            
+                         
         if len(bucket_group) > 0:
             self.groups.append(bucket_group)
         
