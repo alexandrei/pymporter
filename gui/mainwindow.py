@@ -61,6 +61,7 @@ class ui_mainwindow(QtGui.QMainWindow):
     def _add_statusbar(self):
         self.statusbar = QtGui.QStatusBar(self)
         self.statusbar.setObjectName("statusbar")
+        self.statusbar.setSizeGripEnabled(1)
         self.setStatusBar(self.statusbar)
         
     def _add_tabs(self):
