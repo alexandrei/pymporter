@@ -13,6 +13,7 @@ class ui_mainwindow(QtGui.QMainWindow):
         self.setCentralWidget(self.centralwidget)
         
         self._add_menubar()
+        self._add_statusbar()
         self._add_tabs()
         self._enable_actions()
         
@@ -56,6 +57,11 @@ class ui_mainwindow(QtGui.QMainWindow):
         
         #add menubar to the main window
         self.setMenuBar(self.menubar)
+        
+    def _add_statusbar(self):
+        self.statusbar = QtGui.QStatusBar(self)
+        self.statusbar.setObjectName("statusbar")
+        self.setStatusBar(self.statusbar)
         
     def _add_tabs(self):
         
