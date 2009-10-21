@@ -87,7 +87,7 @@ class ui_mainwindow(QtGui.QMainWindow):
         #create tabs group
         self.tabs = QtGui.QTabWidget(self.centralwidget)
         self.tabs.setObjectName("tabs")
-        self.tabs.setGeometry(QtCore.QRect(0, 0, 780, 550))
+        self.tabs.setGeometry(QtCore.QRect(5, 0, 791, 553))
         self.tabs.setSizePolicy(sizePolicy)
                 
         
