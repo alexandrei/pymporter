@@ -7,11 +7,10 @@ Created on Oct 19, 2009
 import sys
 from PyQt4 import QtCore, QtGui
 
-#from mainwindow_ui import Ui_main_window
 from about_dialog import ui_about_dialog
 from mainwindow import ui_mainwindow
 
-class MyForm(ui_mainwindow):
+class PymporterGUI(ui_mainwindow):
     def __init__(self, parent = None):
         ui_mainwindow.__init__(self, parent)
 
@@ -25,6 +24,6 @@ class MyForm(ui_mainwindow):
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
-    myapp = MyForm()
+    myapp = PymporterGUI()
     myapp.show()
     sys.exit(app.exec_())
