@@ -19,6 +19,8 @@ class ui_mainwindow(QtGui.QMainWindow):
         
         self.setCentralWidget(self.centralwidget)
         
+        self.main_layout = QtGui.QVBoxLayout(self.centralwidget)
+        
         self._add_menubar()
         self._add_statusbar()
         self._add_tabs()
@@ -97,12 +99,14 @@ class ui_mainwindow(QtGui.QMainWindow):
         self.tabs.setObjectName("tabs")
         self.tabs.setGeometry(QtCore.QRect(5, 0, 791, 553))
         self.tabs.setSizePolicy(sizePolicy)
+        self.tabs.setStyleSheet("background-color: #111111")
                 
         
         self.tabs.addTab(self.config_tab,"Configuration")
         self.tabs.addTab(self.groups_tab,"Groups")
         self.tabs.addTab(self.review_tab,"Review")
         self.tabs.setCurrentIndex(0) #select which is the default tab
+        self.main_layout.addWidget(self.tabs)
         
     def _enable_actions(self):
         QtCore.QObject.connect(self.actionQuit, QtCore.SIGNAL("activated()"), self.close)
