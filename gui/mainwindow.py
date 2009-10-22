@@ -6,10 +6,17 @@ class ui_mainwindow(QtGui.QMainWindow):
         QtGui.QMainWindow.__init__(self)     
         self.setObjectName("mainwindow")
         self.resize(800,600)
-        self.setWindowTitle(QtGui.QApplication.translate("mainwindow", "Python Photo Importer", None, QtGui.QApplication.UnicodeUTF8))
+        self.setWindowTitle(QtGui.QApplication.translate("mainwindow", "Python Photo Importer", None, QtGui.QApplication.UnicodeUTF8))       
         
         self.centralwidget = QtGui.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
+        
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
+        self.centralwidget.setSizePolicy(sizePolicy)
+        
         self.setCentralWidget(self.centralwidget)
         
         self._add_menubar()
