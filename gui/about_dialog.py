@@ -14,6 +14,7 @@ class ui_about_dialog(QtGui.QDialog):
         QtGui.QDialog.__init__(self, parent)
         self.setObjectName("about_dialog")
         self.resize(280, 180)
+        self.setModal(True)
         self.buttonBox = QtGui.QDialogButtonBox(self)
         self.buttonBox.setGeometry(QtCore.QRect(30, 140, 230, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
