@@ -7,15 +7,9 @@ class ui_mainwindow(QtGui.QMainWindow):
         self.setObjectName("mainwindow")
         self.resize(800,600)
         self.setWindowTitle(QtGui.QApplication.translate("mainwindow", "Python Photo Importer", None, QtGui.QApplication.UnicodeUTF8))       
-        
+                
         self.centralwidget = QtGui.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
-        
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
-        self.centralwidget.setSizePolicy(sizePolicy)
         
         self.setCentralWidget(self.centralwidget)
         
@@ -74,31 +68,22 @@ class ui_mainwindow(QtGui.QMainWindow):
         self.setStatusBar(self.statusbar)
         
     def _add_tabs(self):
-        
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
-        #sizePolicy.setHorizontalStretch(0)
-        #sizePolicy.setVerticalStretch(0)
                 
         #config tab
         self.config_tab = QtGui.QWidget()
         self.config_tab.setObjectName("config_tab")
-        self.config_tab.setSizePolicy(sizePolicy)
         
         #groups tab
         self.groups_tab = QtGui.QWidget()
         self.groups_tab.setObjectName("groups_tab")
-        self.groups_tab.setSizePolicy(sizePolicy)
         
         #review tab
         self.review_tab = QtGui.QWidget()
         self.review_tab.setObjectName("review_tab")
-        self.review_tab.setSizePolicy(sizePolicy)
         
         #create tabs group
         self.tabs = QtGui.QTabWidget(self.centralwidget)
         self.tabs.setObjectName("tabs")
-        self.tabs.setGeometry(QtCore.QRect(5, 0, 791, 553))
-        self.tabs.setSizePolicy(sizePolicy)
         self.tabs.setStyleSheet("background-color: #111111")
                 
         
