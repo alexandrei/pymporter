@@ -96,32 +96,65 @@ class ui_mainwindow(QtGui.QMainWindow):
         
     def _build_config_tab(self):
         
+        #create widgets for each group
         self.config_tab_input_widget = QtGui.QWidget(self.config_tab)
         self.config_tab_input_widget.setObjectName("config_tab_input_widget")
-                
+        
+        self.config_tab_output_widget = QtGui.QWidget(self.config_tab)
+        self.config_tab_output_widget.setObjectName("config_tab_output_widget")
+        
+        #set the tab main layout
+        self.config_tab_layout = QtGui.QVBoxLayout(self.config_tab)
+        self.config_tab_layout.addItem(QtGui.QSpacerItem(0,40))  
+        self.config_tab_layout.addWidget(self.config_tab_input_widget)
+        self.config_tab_layout.addWidget(self.config_tab_output_widget)
+        self.config_tab_layout.addItem(QtGui.QSpacerItem(0,0, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding))
+
+        #set the layout for each widget
+        self.input_source_layout = QtGui.QHBoxLayout(self.config_tab_input_widget)
+        self.input_source_layout.setObjectName("input_source_layout")
+        
+        self.output_source_layout = QtGui.QHBoxLayout(self.config_tab_output_widget)
+        self.output_source_layout.setObjectName("output_source_layout")
+
+        #create elements for input widget
         self.input_source_label = QtGui.QLabel(self.config_tab_input_widget)
         self.input_source_label.setObjectName("input_source_label")
-        self.input_source_label.setText("Source folder:")      
+        self.input_source_label.setText("Source folder:")   
+        self.input_source_label.setMinimumWidth(120)   
         
         self.input_source_text = QtGui.QLineEdit(self.config_tab_input_widget)
         self.input_source_text.setObjectName("input_source_text")
-        self.input_source_text.setMinimumSize(QtCore.QSize(420, 0))
+        #self.input_source_text.setMinimumSize(QtCore.QSize(420, 0))
         
         self.input_source_cmd = QtGui.QToolButton(self.config_tab_input_widget)
         self.input_source_cmd.setObjectName("input_source_cmd")
         self.input_source_cmd.setText("...")
-                
-        self.input_source_layout = QtGui.QFormLayout(self.config_tab_input_widget)
-        self.input_source_layout.setObjectName("input_source_layout")
         
-        self.input_source_layout_a = QtGui.QFormLayout()
-        self.input_source_layout_a.setObjectName("input_source_layout_a")
+        #create elements for output widget
+        self.output_source_label = QtGui.QLabel(self.config_tab_output_widget)
+        self.output_source_label.setObjectName("output_source_label")
+        self.output_source_label.setText("Destination folder:")
+        self.output_source_label.setMinimumWidth(120)      
         
-        self.input_source_layout_a.setWidget(0, QtGui.QFormLayout.LabelRole, self.input_source_label)
-        self.input_source_layout_a.setWidget(0, QtGui.QFormLayout.FieldRole, self.input_source_text)
+        self.output_source_text = QtGui.QLineEdit(self.config_tab_output_widget)
+        self.output_source_text.setObjectName("output_source_text")
+        #self.output_source_text.setMinimumSize(QtCore.QSize(420, 0))
         
-        self.input_source_layout.setLayout(0, QtGui.QFormLayout.LabelRole, self.input_source_layout_a)
-        self.input_source_layout.setWidget(0, QtGui.QFormLayout.FieldRole, self.input_source_cmd)
+        self.output_source_cmd = QtGui.QToolButton(self.config_tab_output_widget)
+        self.output_source_cmd.setObjectName("output_source_cmd")
+        self.output_source_cmd.setText("...")
+        
+        
+        
+        #add elements to each widget
+        self.input_source_layout.addWidget(self.input_source_label)
+        self.input_source_layout.addWidget(self.input_source_text)
+        self.input_source_layout.addWidget(self.input_source_cmd)
+        
+        self.output_source_layout.addWidget(self.output_source_label)
+        self.output_source_layout.addWidget(self.output_source_text)
+        self.output_source_layout.addWidget(self.output_source_cmd)
         
     def _get_input_folder_path(self):
         fd = QtGui.QFileDialog(self)
