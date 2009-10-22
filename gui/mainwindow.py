@@ -9,8 +9,7 @@ class ui_mainwindow(QtGui.QMainWindow):
         self.setWindowTitle(QtGui.QApplication.translate("mainwindow", "Python Photo Importer", None, QtGui.QApplication.UnicodeUTF8))       
                 
         self.centralwidget = QtGui.QWidget(self)
-        self.centralwidget.setObjectName("centralwidget")
-        
+        self.centralwidget.setObjectName("centralwidget")   
         self.setCentralWidget(self.centralwidget)
         
         self.main_layout = QtGui.QVBoxLayout(self.centralwidget)
@@ -72,6 +71,7 @@ class ui_mainwindow(QtGui.QMainWindow):
         #config tab
         self.config_tab = QtGui.QWidget()
         self.config_tab.setObjectName("config_tab")
+        self._build_config_tab()
         
         #groups tab
         self.groups_tab = QtGui.QWidget()
@@ -84,7 +84,7 @@ class ui_mainwindow(QtGui.QMainWindow):
         #create tabs group
         self.tabs = QtGui.QTabWidget(self.centralwidget)
         self.tabs.setObjectName("tabs")
-        self.tabs.setStyleSheet("background-color: #111111")
+        #self.tabs.setStyleSheet("background-color: #111111")
                 
         
         self.tabs.addTab(self.config_tab,"Configuration")
@@ -93,6 +93,40 @@ class ui_mainwindow(QtGui.QMainWindow):
         self.tabs.setCurrentIndex(0) #select which is the default tab
         self.main_layout.addWidget(self.tabs)
         
+    def _build_config_tab(self):
+        
+        self.config_tab_input_widget = QtGui.QWidget(self.config_tab)
+        self.config_tab_input_widget.setObjectName("config_tab_input_widget")
+                
+        self.input_source_label = QtGui.QLabel(self.config_tab_input_widget)
+        self.input_source_label.setObjectName("input_source_label")
+        self.input_source_label.setText("Source folder:")      
+        
+        self.input_source_text = QtGui.QLineEdit(self.config_tab_input_widget)
+        self.input_source_text.setObjectName("input_source_text")
+        
+        self.input_source_cmd = QtGui.QToolButton(self.config_tab_input_widget)
+        self.input_source_cmd.setObjectName("input_source_cmd")
+        self.input_source_cmd.setText("...")
+                
+        self.input_source_layout = QtGui.QFormLayout(self.config_tab_input_widget)
+        self.input_source_layout.setObjectName("input_source_layout")
+        
+        self.input_source_layout_a = QtGui.QFormLayout()
+        self.input_source_layout_a.setObjectName("input_source_layout_a")
+        
+        self.input_source_layout_a.setWidget(0, QtGui.QFormLayout.LabelRole, self.input_source_label)
+        self.input_source_layout_a.setWidget(0, QtGui.QFormLayout.FieldRole, self.input_source_text)
+        
+        self.input_source_layout.setLayout(0, QtGui.QFormLayout.LabelRole, self.input_source_layout_a)
+        self.input_source_layout.setWidget(0, QtGui.QFormLayout.FieldRole, self.input_source_cmd)
+        
+    def _get_input_folder_path(self):
+        fd = QtGui.QFileDialog(self)
+        self.input_source_text.setText(fd.getExistingDirectory())
+        
+        
     def _enable_actions(self):
+        QtCore.QObject.connect(self.input_source_cmd, QtCore.SIGNAL("clicked()"), self._get_input_folder_path)
         QtCore.QObject.connect(self.actionQuit, QtCore.SIGNAL("activated()"), self.close)
         QtCore.QMetaObject.connectSlotsByName(self)
