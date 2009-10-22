@@ -6,7 +6,8 @@ class ui_mainwindow(QtGui.QMainWindow):
         QtGui.QMainWindow.__init__(self)     
         self.setObjectName("mainwindow")
         self.resize(800,600)
-        self.setWindowTitle(QtGui.QApplication.translate("mainwindow", "Python Photo Importer", None, QtGui.QApplication.UnicodeUTF8))       
+        self.setWindowTitle(QtGui.QApplication.translate("mainwindow", "Python Photo Importer", None, QtGui.QApplication.UnicodeUTF8))
+        self.setMinimumSize(QtCore.QSize(640, 480))       
                 
         self.centralwidget = QtGui.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")   
