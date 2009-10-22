@@ -105,6 +105,7 @@ class ui_mainwindow(QtGui.QMainWindow):
         
         self.input_source_text = QtGui.QLineEdit(self.config_tab_input_widget)
         self.input_source_text.setObjectName("input_source_text")
+        self.input_source_text.setMinimumSize(QtCore.QSize(420, 0))
         
         self.input_source_cmd = QtGui.QToolButton(self.config_tab_input_widget)
         self.input_source_cmd.setObjectName("input_source_cmd")
