@@ -163,5 +163,4 @@ class ui_mainwindow(QtGui.QMainWindow):
         
     def _enable_actions(self):
         QtCore.QObject.connect(self.input_source_cmd, QtCore.SIGNAL("clicked()"), self._get_input_folder_path)
-        QtCore.QObject.connect(self.actionQuit, QtCore.SIGNAL("activated()"), self.close)
         QtCore.QMetaObject.connectSlotsByName(self)

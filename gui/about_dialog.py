@@ -25,5 +25,5 @@ class ui_about_dialog(QtGui.QDialog):
         self.setWindowTitle(QtGui.QApplication.translate("about_dialog", "About Pymporter", None, QtGui.QApplication.UnicodeUTF8))
         
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("clicked(QAbstractButton*)"), self.close)
-        #QtCore.QMetaObject.connectSlotsByName(about_dialog)
+        QtCore.QMetaObject.connectSlotsByName(self)
         

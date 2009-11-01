@@ -15,7 +15,8 @@ class PymporterGUI(ui_mainwindow):
         ui_mainwindow.__init__(self, parent)
 
         #extra slots and signals, that are not embedded in main window
-        QtCore.QObject.connect(self.actionAbout, QtCore.SIGNAL("activated()"), self.show_about)
+        QtCore.QObject.connect(self.actionAbout, QtCore.SIGNAL("triggered()"), self.show_about)
+        QtCore.QObject.connect(self.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QMetaObject.connectSlotsByName(self)
         
     def show_about(self):
