@@ -7,8 +7,8 @@ Created on Oct 19, 2009
 import sys
 from PyQt4 import QtCore, QtGui
 
-from about_dialog import ui_about_dialog
-from mainwindow import ui_mainwindow
+from gui.about_dialog import ui_about_dialog
+from gui.mainwindow import ui_mainwindow
 
 class PymporterGUI(ui_mainwindow):
     def __init__(self, parent = None):
